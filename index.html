@@ -1063,11 +1063,6 @@ function renderHomePage(){
       <p style="font-size:.8rem;color:var(--muted);margin-bottom:0">以下教案建議時間是備課參考，不是倒數計時或強制完成限制。</p>
     </div>
   </div>
-
-  <div class="tbd" style="margin-top:22px">
-    <h4>⚠ 待確認事項（請勿自行假設）</h4>
-    <ul>${PENDING.map(p=>`<li>${p}</li>`).join('')}</ul>
-  </div>
   `;
 }
 
@@ -1134,22 +1129,6 @@ function renderResourcesPage(){
   <div class="card card-pad" style="margin-top:18px">
     <h3 style="color:var(--sky);font-size:1.1rem">六國文化備課總覽</h3>
     ${countryPrepHTML()}
-  </div>
-
-  <div class="tbd" style="margin-top:18px">
-    <h4>⚠ 待確認事項</h4>
-    <ul>${PENDING.map(p=>`<li>${p}</li>`).join('')}</ul>
-  </div>
-
-  <div class="card card-pad" style="margin-top:18px">
-    <h3 style="font-size:1rem">製作說明／與附件 PDF 的差異</h3>
-    <ul class="prep-list" style="font-size:.88rem;color:var(--ink-soft)">
-      <li>三份附件 PDF 原始內容未被修改；本網站之教學步驟、文化背景與十二張卡片範例，皆為依據 PDF 內容延伸編寫的教學用文字。</li>
-      <li>PDF 印刷品牌為「A PLUS CHRISTMAS WALK」，本網站依決議改用中文活動名稱「耶加聖誕暖心地圖 2026」，兩者並存、不互相取代。</li>
-      <li>教材上印製的 QR code 原本連到 Jukebox／六國祝福播放清單，本網站沿用同一份播放清單連結，不另外製作新的 QR code。</li>
-      <li>L&amp;U PDF 的 Lesson 2「Ideas」欄印刷文字為 sell pencils／care for animals；本次決議改用 sell school supplies／sell pet supplies，避免預設寵物店一定提供照護或救援，網站以最新決議為準，PDF 文字未同步修改。</li>
-      <li>L&amp;U PDF 的 Lesson 2 對話最後一格「B: I will ___.」印刷為開放式空格；本次決議示範為固定句「I will say “Merry Christmas!”」，作為口說練習的建議語句，學習單上的空格仍可讓學生自行填寫。</li>
-    </ul>
   </div>
   `;
 }
@@ -1220,7 +1199,7 @@ document.body.addEventListener('click', function(e){
   if(gotoEl){ e.preventDefault(); go(gotoEl.dataset.goto); return; }
 });
 
-document.getElementById('pdfSyncNote').textContent = '內容依使用者提供之教案決議與 A & P／L & U／S & J 三份教材製作，詳見「教材與資源」頁之製作說明。';
+document.getElementById('pdfSyncNote').textContent = '內容依使用者提供之教案決議與 A & P／L & U／S & J 三份教材製作。';
 
 /* 初始渲染 */
 render();
