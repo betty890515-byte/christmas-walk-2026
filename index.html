@@ -1,0 +1,1227 @@
+<title>耶加聖誕暖心地圖</title>
+<meta name="description" content="2026 耶加聖誕暖心地圖教師教案網站">
+<style>
+/* ===================== 設計代幣 Design Tokens ===================== */
+:root{
+  --paper:#FBF1DE;       /* 米白底 */
+  --paper-dim:#F3E4C2;   /* 卡片／分隔用的深一階米色 */
+  --paper-line:#E7D6AD;  /* 邊線 */
+  --ink:#16314A;         /* 深藍標題字 */
+  --ink-soft:#4A5A6B;    /* 次要文字 */
+  --muted:#8A7F68;       /* 說明／時間戳等輔助文字,暖灰偏米 */
+  --flame:#F0400F;       /* 橘紅 */
+  --flame-dim:#FDE3D6;   /* 橘紅淡底 */
+  --sky:#1D5FD6;         /* 藍 */
+  --sky-dim:#DCE8FB;     /* 藍淡底 */
+  --pine:#0B7A57;        /* 綠 */
+  --pine-dim:#D9EFE4;    /* 綠淡底 */
+  --gold:#FFC83D;        /* 黃 */
+  --gold-dim:#FFF2CE;    /* 黃淡底 */
+  --card:#FFFDF7;        /* 卡片白 */
+  --shadow: 0 6px 18px -8px rgba(22,49,74,.25);
+  --radius-lg:22px;
+  --radius-md:14px;
+  --radius-sm:9px;
+  --font-disp:'Fredoka', 'Noto Sans TC', system-ui, sans-serif;
+  --font-body:'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', system-ui, sans-serif;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--font-body);
+  line-height:1.65;
+  font-size:16px;
+}
+h1,h2,h3,h4{font-family:var(--font-disp);font-weight:700;margin:0 0 .4em;text-wrap:balance;letter-spacing:.2px}
+p{margin:0 0 .8em}
+a{color:var(--sky)}
+img{max-width:100%;display:block}
+button{font-family:inherit}
+:focus-visible{outline:3px solid var(--sky); outline-offset:2px; border-radius:4px}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+[hidden]{display:none !important}
+
+/* ===================== 頂部列 ===================== */
+.topbar{
+  position:sticky;top:0;z-index:40;
+  background:linear-gradient(180deg,var(--paper) 85%, rgba(251,241,222,0));
+  background-color:var(--paper);
+  border-bottom:3px solid var(--ink);
+}
+.topbar-inner{
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  padding:10px 20px;max-width:1180px;margin:0 auto;
+}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--font-disp);font-weight:700;font-size:1.05rem;color:var(--flame);white-space:nowrap}
+.brand .tree{width:22px;height:22px;flex:none}
+.nav{display:flex;gap:6px;overflow-x:auto;flex:1;min-width:180px;scrollbar-width:thin}
+.nav button{
+  background:transparent;border:none;color:var(--ink-soft);
+  padding:8px 12px;border-radius:999px;font-size:.92rem;font-weight:700;cursor:pointer;white-space:nowrap;
+}
+.nav button:hover{background:var(--paper-dim)}
+.nav button[aria-current="page"]{background:var(--ink);color:var(--paper)}
+.gradeswitch{display:flex;gap:4px;background:var(--paper-dim);padding:4px;border-radius:999px;border:1px solid var(--paper-line)}
+.gradeswitch button{
+  border:none;background:transparent;padding:7px 13px;border-radius:999px;font-weight:700;font-size:.86rem;cursor:pointer;color:var(--ink-soft);
+}
+.gradeswitch button[aria-current="true"]{background:var(--flame);color:#fff}
+.projbtn{
+  display:flex;align-items:center;gap:6px;border:2px solid var(--ink);background:var(--card);
+  color:var(--ink);border-radius:999px;padding:7px 14px;font-weight:700;font-size:.86rem;cursor:pointer;
+}
+.projbtn.on{background:var(--ink);color:var(--paper)}
+.projbtn svg{width:16px;height:16px}
+
+/* ===================== 通用元件 ===================== */
+.section-pad{padding:28px 0 60px}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 13px;font-weight:700;font-size:.82rem}
+.pill-flame{background:var(--flame-dim);color:var(--flame)}
+.pill-sky{background:var(--sky-dim);color:var(--sky)}
+.pill-pine{background:var(--pine-dim);color:var(--pine)}
+.pill-gold{background:var(--gold-dim);color:#8a6400}
+
+.card{background:var(--card);border-radius:var(--radius-lg);box-shadow:var(--shadow);border:1px solid var(--paper-line)}
+.card-pad{padding:22px}
+
+.btn{
+  display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:11px 22px;font-weight:700;
+  cursor:pointer;border:none;font-size:.95rem;text-decoration:none;
+}
+.btn-flame{background:var(--flame);color:#fff}
+.btn-flame:hover{background:#d8390d}
+.btn-ghost{background:var(--card);color:var(--ink);border:2px solid var(--ink)}
+.btn-ghost:hover{background:var(--paper-dim)}
+.btn-sm{padding:7px 14px;font-size:.84rem;border-radius:999px}
+
+.hero{
+  background:var(--card);border-radius:var(--radius-lg);box-shadow:var(--shadow);
+  padding:34px clamp(20px,5vw,46px);border:1px solid var(--paper-line);position:relative;overflow:hidden;
+}
+.hero::before{
+  content:"";position:absolute;inset:0;
+  background:
+    radial-gradient(circle at 92% -6%, var(--gold-dim) 0, transparent 40%),
+    radial-gradient(circle at -4% 110%, var(--sky-dim) 0, transparent 38%);
+  pointer-events:none;
+}
+.hero > *{position:relative}
+.hero h1{font-size:clamp(1.7rem,3.6vw,2.5rem);color:var(--flame);line-height:1.25}
+.hero .sub{font-family:var(--font-disp);color:var(--ink);font-size:clamp(1.05rem,2vw,1.3rem);font-weight:600;margin-bottom:14px}
+
+.grade-pick{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:18px 0}
+.grade-pick button{
+  display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;
+  background:var(--paper-dim);border:2px solid transparent;border-radius:var(--radius-md);padding:14px 16px;cursor:pointer;
+}
+.grade-pick button b{font-family:var(--font-disp);font-size:1.05rem;color:var(--ink)}
+.grade-pick button span{font-size:.82rem;color:var(--ink-soft)}
+.grade-pick button[aria-current="true"]{border-color:var(--flame);background:var(--flame-dim)}
+
+.journey{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:22px 0}
+.journey a{
+  display:block;text-decoration:none;color:var(--ink);background:var(--paper-dim);border-radius:var(--radius-md);
+  padding:16px 14px;text-align:center;border:1px solid var(--paper-line);transition:transform .12s;
+}
+.journey a:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.journey .num{font-family:var(--font-disp);font-weight:700;color:var(--flame);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:6px}
+.journey .label{font-weight:700}
+.journey .arrow{color:var(--muted);text-align:center;align-self:center;font-size:1.4rem}
+@media (max-width:820px){.journey{grid-template-columns:1fr}.journey .arrow{display:none}}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media (max-width:860px){.grid2{grid-template-columns:1fr}}
+
+.rule-list, .prep-list{margin:0;padding-left:1.2em}
+.rule-list li, .prep-list li{margin-bottom:.5em}
+
+.callout{border-radius:var(--radius-md);padding:16px 18px;border:1.5px dashed}
+.callout-amber{background:var(--gold-dim);border-color:#D8A72A;color:#6b5000}
+.callout-sky{background:var(--sky-dim);border-color:var(--sky);color:#123A7D}
+.callout h4{margin-bottom:.3em;font-size:.95rem}
+
+/* 待確認清單樣式 */
+.tbd{background:#FFF8E8;border:2px dashed #D8A72A;border-radius:var(--radius-md);padding:16px 18px}
+.tbd h4{color:#8a6400;display:flex;align-items:center;gap:6px;font-size:1rem}
+.tbd ul{margin:.4em 0 0;padding-left:1.1em}
+.tbd li{margin-bottom:.35em;color:#6b5000}
+
+/* ===================== 每週進度 ===================== */
+.weektable{width:100%;border-collapse:separate;border-spacing:0 10px}
+.weektable td{vertical-align:top;padding:14px 16px;background:var(--card);border:1px solid var(--paper-line)}
+.weektable tr td:first-child{border-radius:var(--radius-md) 0 0 var(--radius-md);width:150px;font-family:var(--font-disp);font-weight:700;color:var(--flame);font-variant-numeric:tabular-nums}
+.weektable tr td:last-child{border-radius:0 var(--radius-md) var(--radius-md) 0}
+.weektable tr.muted td{opacity:.6;font-style:italic}
+.wk-links{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.scrollx{overflow-x:auto}
+
+/* ===================== 教學指引頁 ===================== */
+.guide-topbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.segnav{display:flex;gap:6px;flex-wrap:wrap}
+.segnav button{
+  background:var(--card);border:1.5px solid var(--paper-line);border-radius:999px;padding:7px 14px;font-weight:700;
+  font-size:.85rem;color:var(--ink-soft);cursor:pointer;
+}
+.segnav button[aria-current="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+.guide-layout{display:grid;grid-template-columns:minmax(260px,420px) 1fr;gap:22px;align-items:start}
+@media (max-width:980px){.guide-layout{grid-template-columns:1fr}}
+
+.tb-viewer{position:sticky;top:76px}
+@media (max-width:980px){.tb-viewer{position:static}}
+.tb-tools{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px;flex-wrap:wrap}
+.tb-pages{display:flex;gap:6px}
+.tb-pages button{border:1.5px solid var(--ink);background:var(--card);border-radius:999px;padding:5px 12px;font-weight:700;font-size:.8rem;cursor:pointer}
+.tb-pages button[aria-current="true"]{background:var(--ink);color:var(--paper)}
+.tb-frame{position:relative;border-radius:var(--radius-md);overflow:hidden;border:2px solid var(--ink);box-shadow:var(--shadow);background:#fff}
+.tb-frame img{width:100%;display:block}
+.tb-zone{position:absolute;left:0;width:100%;cursor:pointer;background:transparent;border:none;padding:0;margin:0;appearance:none;font:inherit}
+.tb-zone::before{content:"";position:absolute;left:0;top:4px;bottom:4px;width:4px;border-radius:2px;background:transparent;transition:background .15s}
+.tb-zone:hover,.tb-zone:focus-visible{background:rgba(29,95,214,.06)}
+.tb-zone:hover::before,.tb-zone:focus-visible::before{background:var(--sky)}
+.tb-zone.active{background:rgba(240,64,15,.045)}
+.tb-zone.active::before{background:var(--flame);width:5px}
+.tb-caption{font-size:.78rem;color:var(--muted);margin-top:6px}
+
+.lightbox-btn{border:none;background:var(--card);border:1.5px solid var(--ink);border-radius:999px;padding:5px 12px;font-size:.78rem;font-weight:700;cursor:pointer}
+
+/* 教學指引內容卡 */
+.guide-panel h3{color:var(--flame);font-size:1.3rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.step{display:grid;grid-template-columns:34px 1fr;gap:10px;margin-bottom:14px}
+.step .n{
+  width:34px;height:34px;border-radius:50%;background:var(--pine);color:#fff;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-disp);font-weight:700;flex:none;
+}
+.step b{display:block;margin-bottom:2px;color:var(--ink)}
+.task-callout{background:var(--sky-dim);border-radius:var(--radius-md);padding:14px 16px;margin:10px 0}
+.task-callout b{color:var(--sky)}
+
+details.teacher-detail{
+  margin-top:12px;border:1px solid var(--paper-line);border-radius:var(--radius-md);background:var(--paper-dim);overflow:hidden;
+}
+details.teacher-detail summary{
+  cursor:pointer;padding:11px 16px;font-weight:700;color:var(--pine);list-style:none;display:flex;align-items:center;gap:8px;
+}
+details.teacher-detail summary::-webkit-details-marker{display:none}
+details.teacher-detail summary::before{content:"▸";transition:transform .15s}
+details.teacher-detail[open] summary::before{transform:rotate(90deg)}
+details.teacher-detail .inner{padding:0 16px 16px}
+details.teacher-detail .inner h5{margin:.9em 0 .25em;color:var(--ink);font-size:.92rem}
+details.teacher-detail .inner p,details.teacher-detail .inner li{font-size:.92rem;color:var(--ink-soft)}
+
+.dialog-box{background:var(--card);border:1px solid var(--paper-line);border-radius:var(--radius-md);padding:14px 16px;margin:10px 0;font-size:.95rem}
+.dialog-box .a{color:var(--sky);font-weight:700}
+.dialog-box .b{color:var(--pine);font-weight:700}
+.dialog-box .blank{text-decoration:underline;text-decoration-style:dotted;color:var(--flame);font-weight:700}
+.wordbank{display:inline-flex;gap:6px;flex-wrap:wrap;margin-left:4px}
+.wordbank span{background:var(--gold-dim);border-radius:999px;padding:1px 9px;font-size:.78rem;color:#6b5000}
+
+.country-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+.country-card{background:var(--card);border:1px solid var(--paper-line);border-radius:var(--radius-md);overflow:hidden}
+.country-card img{width:100%;height:76px;object-fit:cover;object-position:top}
+.country-card .cc-body{padding:8px 10px}
+.country-card .cc-body b{display:block;font-size:.86rem}
+.country-card .cc-body span{font-size:.78rem;color:var(--muted)}
+
+.prep-card{background:var(--card);border:1px solid var(--paper-line);border-radius:var(--radius-md);margin-bottom:10px;overflow:hidden}
+.prep-card-inner{display:flex;gap:12px;padding:12px}
+.prep-card-inner img{width:120px;height:auto;border-radius:8px;flex:none}
+.prep-card-inner .quickteach{margin:.5em 0 0;font-size:.88rem;color:var(--ink-soft)}
+.prep-card-inner .quickteach b{color:var(--ink)}
+@media (max-width:600px){.prep-card-inner{flex-direction:column}.prep-card-inner img{width:100%;height:140px;object-fit:cover}}
+
+#ex1List .ex1-answer{display:none}
+#ex1List.show-answers .ex1-answer{display:inline-flex}
+.video-jump button[aria-current="true"]{border-color:var(--flame);color:var(--flame);background:var(--flame-dim)}
+
+.video-wrap{position:relative;border-radius:var(--radius-md);overflow:hidden;border:2px solid var(--ink);background:#000;aspect-ratio:16/9}
+.video-wrap iframe{width:100%;height:100%;border:0}
+.video-jump{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.video-jump button{background:var(--card);border:1.5px solid var(--paper-line);border-radius:999px;padding:6px 12px;font-size:.82rem;font-weight:700;cursor:pointer}
+.video-jump button:hover{border-color:var(--sky)}
+.fallback-link{font-size:.8rem;color:var(--muted)}
+
+.ex1-row{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start;padding:8px 0;border-bottom:1px dashed var(--paper-line)}
+.ex1-row .num{width:28px;height:28px;border-radius:50%;background:var(--flame);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.82rem}
+.ex1-answer{display:inline-flex;align-items:center;gap:5px;font-weight:700;color:var(--pine)}
+
+.song-card{display:grid;grid-template-columns:260px 1fr;gap:16px;margin-bottom:18px}
+@media (max-width:760px){.song-card{grid-template-columns:1fr}}
+
+.card-sample{background:var(--card);border:1px solid var(--paper-line);border-radius:var(--radius-md);padding:16px;position:relative}
+.card-sample::before{
+  content:"";position:absolute;inset:0;border-radius:var(--radius-md);padding:4px;pointer-events:none;
+  background:repeating-linear-gradient(45deg,var(--flame) 0 10px, transparent 10px 20px, var(--pine) 20px 30px, transparent 30px 40px);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;opacity:.55;
+}
+.card-sample .shoplabel{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.card-sample .shoplabel img{width:34px;height:34px;object-fit:contain}
+.card-sample .line{margin-bottom:6px;font-size:.93rem}
+.card-sample .meta{margin-top:10px;padding-top:10px;border-top:1px dashed var(--paper-line);font-size:.8rem;color:var(--muted)}
+
+.gallery12{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+
+.scenario-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:8px}
+.scenario-grid .sc{background:var(--card);border-radius:var(--radius-sm);padding:10px 12px;border:1px solid var(--paper-line);font-size:.86rem}
+.scenario-grid .sc b{display:block;color:var(--flame);margin-bottom:3px}
+
+/* ===================== 正式卡片文字課 ===================== */
+.flow-steps{counter-reset:flow;display:grid;gap:10px;margin:16px 0}
+.flow-steps .fs{display:grid;grid-template-columns:40px 1fr;gap:12px;background:var(--card);border:1px solid var(--paper-line);border-radius:var(--radius-md);padding:12px 14px}
+.flow-steps .fs .fn{counter-increment:flow;width:40px;height:40px;border-radius:50%;background:var(--sky);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--font-disp);font-weight:700}
+.flow-steps .fs .fn::before{content:counter(flow)}
+.checklist{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.checklist li{display:flex;gap:10px;align-items:flex-start;background:var(--pine-dim);border-radius:var(--radius-sm);padding:10px 12px}
+.checklist li svg{flex:none;margin-top:2px;width:18px;height:18px;color:var(--pine)}
+
+/* ===================== 教材與資源 ===================== */
+.resource-grade{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:10px}
+.resource-grade img{border-radius:var(--radius-sm);border:1px solid var(--paper-line)}
+
+/* ===================== Modal ===================== */
+.modal-backdrop{
+  position:fixed;inset:0;background:rgba(22,49,74,.72);display:flex;align-items:center;justify-content:center;
+  padding:24px;z-index:100;
+}
+.modal-box{background:var(--paper);border-radius:var(--radius-lg);max-width:960px;width:100%;max-height:90vh;overflow:auto;padding:20px;position:relative}
+.modal-close{position:sticky;float:right;top:0;background:var(--ink);color:var(--paper);border:none;border-radius:50%;width:34px;height:34px;font-size:1.1rem;cursor:pointer}
+
+/* ===================== Projector mode ===================== */
+body.projector .guide-layout{grid-template-columns:minmax(300px,1.3fr) 1fr}
+body.projector .tb-frame{border-width:3px}
+body.projector .guide-panel h3{font-size:1.7rem}
+body.projector .guide-panel .step, body.projector .task-callout, body.projector .dialog-box{font-size:1.18rem}
+body.projector .step .n{width:40px;height:40px}
+body.projector details.teacher-detail{display:none}
+body.projector .segnav button{font-size:1rem;padding:9px 16px}
+
+footer{border-top:2px solid var(--paper-line);padding:26px 0 50px;color:var(--muted);font-size:.84rem}
+footer .wrap{display:flex;flex-direction:column;gap:6px}
+
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap">
+
+<!-- ===================== 頂部導覽 ===================== -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <svg class="tree" viewBox="0 0 24 24" fill="none"><path d="M12 2l4 6h-2.5l3.5 5h-3l3.5 5H6.5L10 13H7l3.5-5H8l4-6z" fill="#0B7A57"/><rect x="10.5" y="19" width="3" height="3" fill="#8a5a2b"/><circle cx="12" cy="2" r="1.4" fill="#FFC83D"/></svg>
+      耶加聖誕暖心地圖
+    </div>
+    <nav class="nav" id="mainNav" aria-label="主選單"></nav>
+    <div class="gradeswitch" id="gradeSwitch" aria-label="年級切換"></div>
+    <button class="projbtn" id="projToggle" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="14" height="10" rx="1.5"/><path d="M16 9l5-2.5v7L16 11"/><circle cx="9" cy="19.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+      <span>課堂投影模式</span>
+    </button>
+  </div>
+</header>
+
+<main class="wrap section-pad" id="app"></main>
+
+<footer><div class="wrap">
+  <div>耶加英語部 · A Plus Individualized English Education · 2026 聖誕社區行動教案</div>
+  <div id="pdfSyncNote"></div>
+</div></footer>
+
+<div id="modalRoot"></div>
+
+<script>
+/* =========================================================================
+   DATA
+   ========================================================================= */
+const ASSETS = {
+  flags:{
+    uk:'assets/flag-uk.png', mexico:'assets/flag-mexico.png', philippines:'assets/flag-philippines.png',
+    germany:'assets/flag-germany.png', japan:'assets/flag-japan.png', australia:'assets/flag-australia.png'
+  },
+  shops:{restaurant:'assets/shop-restaurant.png', bookstore:'assets/shop-bookstore.png', stationery:'assets/shop-stationery.png', pet:'assets/shop-pet.png'},
+  speak:'assets/speak-bubble.png', postmark:'assets/postmark.png', stamp:'assets/stamp-tree.png'
+};
+
+const GRADES = {
+  AP:{ key:'AP', label:'低年級 A &amp; P', short:'A & P', level:'Level 2 · A & P', pages:['assets/tb-ap-1.png','assets/tb-ap-2.png'] },
+  LU:{ key:'LU', label:'中年級 L &amp; U', short:'L & U', level:'Level 2 · L & U', pages:['assets/tb-lu-1.png','assets/tb-lu-2.png'] },
+  SJ:{ key:'SJ', label:'高年級 S &amp; J', short:'S & J', level:'Level 2 · S & J', pages:['assets/tb-sj-1.png','assets/tb-sj-2.png'] },
+};
+let currentGrade = localStorage.getItem('xmas2026_grade') || 'AP';
+let currentTbPage = 0; // 0 or 1 textbook page
+let currentSeg = 'open';
+let projector = false;
+
+// 8 個可點選教材區（以頁面百分比高度定義，橫跨整個寬度）
+const ZONES = [
+  {seg:'open',    page:0, top:0,    bottom:22.5, label:'開場'},
+  {seg:'lesson1', page:0, top:23.4, bottom:65.3, label:'Lesson 1'},
+  {seg:'ex1',     page:0, top:65.6, bottom:82.9, label:'Exercise 1'},
+  {seg:'fav',     page:0, top:82.9, bottom:88.7, label:'My Favorite'},
+  {seg:'jukebox', page:0, top:89.2, bottom:100,  label:'Jukebox'},
+  {seg:'lesson2', page:1, top:11.1, bottom:49.3, label:'Lesson 2'},
+  {seg:'ex2',     page:1, top:49.3, bottom:81.5, label:'Exercise 2'},
+  {seg:'lesson3', page:1, top:81.5, bottom:100,  label:'Lesson 3'},
+];
+const SEG_ORDER = ['open','lesson1','ex1','fav','jukebox','lesson2','ex2','lesson3'];
+const SEG_LABEL = {open:'開場',lesson1:'Lesson 1 六國祝福',ex1:'Exercise 1 文化問答',fav:'My Favorite',jukebox:'Jukebox',lesson2:'Lesson 2 認識店家',ex2:'Exercise 2 卡片練習',lesson3:'Lesson 3 到店互動'};
+
+const COUNTRY_NOTE = '每個國家的教學連結是課堂延伸，不是該國習俗的歷史起源。';
+const COUNTRIES = [
+ {key:'uk', name:'英國 the UK', greeting:'Merry Christmas!', t:0, flag:ASSETS.flags.uk, title:'一句話如何傳給很多人？',
+  hook:'如果想讓很多人在同一天收到祝福，你會用什麼方式？',
+  intro:'英國有王室聖誕廣播的傳統。透過電視、廣播等方式，很多人能在聖誕節聽見節日訊息。',
+  prep:['王室聖誕廣播的傳統可追溯到 1932 年，由喬治五世透過收音機傳達訊息。後來，電視讓人們不只聽見聲音，也能看見君主與節慶場景。',
+        '教學時不必要求孩子背年份，而是讓孩子理解：語言可以穿過距離，把心意傳給很多人。電視上的正式訊息，和孩子到店裡親口說祝福，場合雖然不同，都需要讓聽的人接收到想表達的意思。',
+        '不應把這個習俗說成每個英國家庭都一定觀看，也不需要把課程變成王室人物介紹。'],
+  extendQ:['電視能讓很多人收到訊息，親口說祝福又有什麼特別？','如果你是店員，對方太小聲或一直低頭，你會聽得清楚嗎？'],
+  bridge:'引導孩子面向對方、音量適中、清楚說話。',
+  sourceName:'英國王室官方歷史資料 — The Royal Family', sourceUrl:'https://www.royal.uk/history-royal-christmases'},
+ {key:'mexico', name:'墨西哥 Mexico', greeting:'¡Feliz Navidad!', t:5, flag:ASSETS.flags.mexico, title:'分享讓慶祝更有感覺',
+  hook:'你看過把糖果放進容器裡，打開後大家一起分享的活動嗎？',
+  intro:'墨西哥的聖誕季有 Las Posadas 傳統活動，其中常見星形 piñata。人們一起參與，打開後分享裡面的糖果或食物。',
+  prep:['Las Posadas 通常在 12 月 16 日至 24 日進行，與瑪利亞、約瑟尋找住處的故事有關。活動包含相聚、歌唱與其他慶祝方式，星形 piñata 是其中一項具有代表性的元素。',
+        '傳統聖誕 piñata 常有七個尖角；今日也有許多不同造型。它不只是一般生日派對的糖果遊戲，在聖誕季也有文化與宗教背景。',
+        '教材用簡短句子介紹孩子打 piñata，老師可補充「共同參與與分享」，不需要深入要求孩子記憶宗教象徵，也不把所有 piñata 都說成七角星。'],
+  extendQ:['自己拿到糖果，和大家一起分享，感覺有什麼不同？','除了食物，還能分享什麼？'],
+  bridge:'連到分享笑容、祝福與心意，不要求購買或分送食物。',
+  sourceName:'墨西哥 INAH 文化資料', sourceUrl:'https://www.inah.gob.mx/foto-del-dia/acolman-cuatro-siglos-de-posadas-y-tradicionales-pinatas'},
+ {key:'philippines', name:'菲律賓 the Philippines', greeting:'Maligayang Pasko!', t:10, flag:ASSETS.flags.philippines, title:'一盞燈也能傳達期待',
+  hook:'不用文字，只用一個裝飾，你能讓別人感受到聖誕節快到了嗎？',
+  intro:'菲律賓常見稱為 parol 的聖誕燈飾，傳統造型像星星。有些地方從九月就開始出現聖誕歌曲與裝飾。',
+  prep:['Parol 是菲律賓具代表性的聖誕裝飾，傳統星形與伯利恆之星的象徵有關。早期常見紙與骨架製成的燈籠，後來出現貝殼材質、燈光及多樣設計。',
+        '這項文化資料對應兩種教材角度：低、中年級認識星形燈籠，高年級則注意聖誕季較早開始。老師可以把兩者連起來，讓學生理解「準備與期待」本身也是節慶的一部分。',
+        '不要說每個家庭都在同一天開始，也不要把所有 parol 都描述成完全一樣的造型。'],
+  extendQ:['為什麼人們還沒到節日，就開始準備？','卡片上的一幅小圖，可以讓收件人感受到什麼？'],
+  bridge:'美編不必昂貴或複雜；能看出與收件人的關係，就能傳達用心。',
+  sourceName:'Las Piñas 市政府 — Parol Making', sourceUrl:'https://laspinascity.gov.ph/lifestyle/32/parol-making'},
+ {key:'germany', name:'德國 Germany', greeting:'Frohe Weihnachten!', t:15, flag:ASSETS.flags.germany, title:'放鞋子的日子不是聖誕當天',
+  hook:'如果明早可能收到一份小禮物，你會準備什麼放禮物？',
+  intro:'德國有些家庭會在 12 月 5 日晚上放好乾淨的鞋子或靴子，隔天聖尼古拉日查看裡面的小禮物。',
+  prep:['聖尼古拉日是 12 月 6 日。有些家庭會在前一晚讓孩子擦乾淨鞋子，放在門外，期待隔天收到糖果、水果、堅果或小禮物。',
+        '這是聖誕季的一項傳統，但不是 12 月 25 日。老師需要清楚區分「12/5 晚上準備」「12/6 早上查看」，避免學生把題目中的日期記成聖誕節日期。',
+        '不同地區與家庭的做法可能不同。介紹時不必用「好孩子才有禮物」作為班級管理或評價學生的方式。'],
+  extendQ:['為什麼會先把鞋子擦乾淨？','我們送出的卡片，可以做哪些準備讓對方容易閱讀？'],
+  bridge:'連到整齊書寫、確認收件人與完成署名，強調準備的心意。',
+  sourceName:'德國官方觀光資料 — Romantic Advent', sourceUrl:'https://www.germany.travel/en/cities-culture/romantic-advent.html'},
+ {key:'japan', name:'日本 Japan', greeting:'Merii Kurisumasu!', t:20, flag:ASSETS.flags.japan, title:'習俗也可能慢慢形成',
+  hook:'你想到聖誕大餐會想到什麼？一定是火雞嗎？',
+  intro:'日本有些家庭會在聖誕節吃 KFC 炸雞。這與店家的聖誕宣傳活動有關，後來逐漸成為一些家庭熟悉的節日選擇。',
+  prep:['KFC 在 1974 年推出聖誕行銷活動，把炸雞與節日聚餐連結起來。隨著宣傳持續，一些家庭逐漸把這種餐點當成聖誕選擇。',
+        '熱門時段也會有提前預訂餐點的安排。老師可讓孩子想像：節日前先討論吃什麼、預約取餐、等待聚會，都是製造節日期待的方式。',
+        '這個例子說明習俗不一定都流傳了幾百年，有些是在生活、商業與家庭選擇中慢慢形成。不能說所有日本家庭都吃 KFC，也不要讓文化介紹變成推銷餐點。'],
+  extendQ:['你們家有沒有某個節日會想到的食物？','如果對方喜歡的方式和你不同，你會怎麼準備祝福？'],
+  bridge:'先認識店家與偏好，再決定內容；不是只準備自己喜歡的東西。',
+  sourceName:'KFC 官方歷史介紹', sourceUrl:'https://global.kfc.com/stories/how-kentucky-for-christmas-began-in-japan'},
+ {key:'australia', name:'澳洲 Australia', greeting:'Merry Christmas, mate!', t:25, flag:ASSETS.flags.australia, title:'沒有雪，也能過聖誕節',
+  hook:'聖誕節一定很冷、一定會下雪嗎？',
+  intro:'澳洲大部分地區的夏季在十二月到二月，因此聖誕節可能是溫暖天氣。有些人會選擇海邊或戶外活動。',
+  prep:['澳洲位於南半球，季節與北半球相反。大部分地區在十二月至二月是夏季，因此不能把北半球常見的雪景當成全世界的聖誕樣貌。',
+        '澳洲幅員廣大，各地氣候不同，北部也有乾、濕季之分。教材中的海灘是一種慶祝情境，不表示每個家庭都去海邊，也不表示所有地區天氣相同。',
+        '教學重點是打開學生對節慶的想像：相同節日可以在不同氣候、環境與生活方式中被慶祝。'],
+  extendQ:['沒有雪，聖誕節會少了祝福嗎？','我們是不是也可以用不同方式表達同樣的心意？'],
+  bridge:'卡片、口語與行動各有作用；選擇適合對方及任務的方式。',
+  sourceName:'澳洲官方觀光氣候資料', sourceUrl:'https://www.australia.com/en/facts-and-planning/weather-in-australia.html'},
+];
+const MATCH_ORDER = ['germany','japan','australia','uk','philippines','mexico']; // 教材配對欄固定順序（三版一致）
+
+const EX1 = {
+  AP:['The King says Happy Christmas on TV!','Kids break a star piñata!','Families hang star lanterns.','Kids put their shoes out for St. Nicholas.','Many families eat KFC!','Christmas is in summer!'],
+  LU:['The King gives a Christmas speech on TV every year.','Kids hit a star piñata until the candy falls out!','Families hang bright star lanterns outside their homes.','On December 5th, kids put their shoes out for St. Nicholas.','Many families eat KFC fried chicken at Christmas.','Christmas is in summer, so many people go to the beach.'],
+  SJ:['The King\'s Christmas speech is on TV every year.','Kids take turns hitting a star piñata full of candy.','Christmas songs start playing in September!','On December 5th, kids leave their shoes outside for treats.','Families order KFC fried chicken weeks before Christmas.','Christmas is in summer, so many people go to the beach.'],
+};
+const EX1_ANSWERS = ['uk','mexico','philippines','germany','japan','australia'];
+const EX1_INSTR = {AP:'Listen and match.', LU:'Read and match. Then circle the most surprising fact!', SJ:'Read and match. Which country is it?'};
+const EX1_CLUES = {
+  AP:['King、Christmas speech、TV','star piñata、candy','star lanterns','shoes、St. Nicholas','KFC、fried chicken','summer'],
+  LU:['King、Christmas speech、TV','star piñata、candy','star lanterns','shoes、St. Nicholas、December 5th','KFC、fried chicken','summer、beach'],
+  SJ:['King、Christmas speech、TV','star piñata、candy','September','shoes、St. Nicholas、December 5th','KFC、fried chicken','summer、beach'],
+};
+const EX1_CORRECT_Q = ['你找到哪個詞，讓你想到這個國家？','這一題是在說食物、裝飾、日期，還是天氣？','哪一項和你原本想的不一樣？'];
+
+const FAVORITE = {
+  AP:{frame:'I like Christmas in ____!', examples:['I like Christmas in Japan!','I like Christmas in Mexico!','I like Christmas in Australia!'],
+      note:'老師問：「你最喜歡哪一種慶祝方式？先指出國家，再放進句子。」理由可用中文，不額外要求 because。'},
+  LU:{frame:'I like Christmas in ____ because ____.', examples:['I like Christmas in Japan because I like fried chicken.','I like Christmas in Mexico because I like piñatas.','I like Christmas in Australia because I like the beach.'],
+      frame2:'I didn\'t know that ____!', examples2:['I didn\'t know that Christmas is in summer in Australia!','I didn\'t know that many families eat KFC at Christmas in Japan!','I didn\'t know that children put their shoes out for St. Nicholas!'],
+      note:'老師先讓學生說中文理由，再協助用已學過的英文表達。'},
+  SJ:{frame:'I want to spend Christmas in ____.', frame2:'I want to ____ there because ____.',
+      examples:[['Australia','go to the beach','I like summer'],['the Philippines','see the star lanterns','they look beautiful'],['Japan','try the Christmas fried chicken','I like fried chicken']],
+      note:'不要求學生把範例理由當成自己的答案。'},
+};
+
+const JUKEBOX_NOTE = '這三首歌分散使用，每次約三至五分鐘，不必同一堂全部教完。前兩首包含愛情主題。課堂可以延伸討論陪伴與節日期待，但要與歌曲原意分開說明。';
+const JUKEBOX_END = '網站不放整首歌詞，不安排整首歌詞背誦。';
+const JUKEBOX = [
+ {artist:'Mariah Carey', title:'All I Want for Christmas Is You', id:'aAkMkVFwAoo',
+  about:'以聖誕節為背景的愛情歌曲，主角比起物質禮物，更希望喜歡的人陪在身邊。',
+  teacherLine:'「這首歌你可能在商場或聖誕活動聽過！歌裡的人最期待的，不是一份禮物，而是喜歡的人陪在身邊。聽聽看，音樂讓你想到什麼感覺？」',
+  steps:['播放前讓學生猜是否聽過。','播放一小段。','請學生用中文或簡單英文分享感受。','選用提問：「除了禮物，什麼也會讓你的聖誕節很開心？」']},
+ {artist:'Justin Bieber', title:'Mistletoe', id:'LUjn3RpkcKY',
+  about:'描寫聖誕氣氛中，想與喜歡的人相處的心情。Mistletoe 是槲寄生，也是部分西方聖誕裝飾中使用的植物，與親吻習俗有關。',
+  teacherLine:'「這首歌的名字是一種植物，叫作槲寄生，在一些聖誕裝飾裡可以看到。歌曲描寫聖誕節裡，想和喜歡的人一起度過的心情。聽聽看，它和上一首的感覺一樣嗎？」',
+  steps:['顯示清楚的槲寄生圖片與來源。','聽一小段，輕拍節奏。','比較兩首歌的感覺。','接受不同答案，不把快慢、喜好或情緒感受設成唯一解答。']},
+ {artist:'José Feliciano feat. FaWiJo', title:'Feliz Navidad', id:'0UVUW11FENs',
+  about:'以西班牙語與英語傳遞聖誕及新年祝福，可連結教材墨西哥的祝福說法。',
+  teacherLine:'「這首歌的名字，前面學過了！誰記得 Feliz Navidad 是什麼意思？這首歌會用兩種語言送祝福，聽聽看，你能找到哪兩種？」',
+  steps:['複習墨西哥圖卡的祝福。','聽見熟悉的西班牙語祝福時舉手。','跟唱熟悉的祝福段落。','選用：分兩組輪流跟唱兩種語言的祝福。']},
+];
+const PLAYLIST_URL = 'https://www.youtube.com/playlist?list=PLOpZkeAi6qJs';
+
+const LESSON2_OPEN = '不同地方的人喜歡不同的慶祝方式，店家也是一樣。我們先看看對方提供什麼、喜歡什麼，再準備適合他的祝福。';
+const LESSON2_OPEN_NOTE = '實際店家名單未提供前，使用一般店型，不虛構合作資訊。';
+const LESSON2 = {
+  AP:{
+    purpose:'認識四種店型的英文單字，練習 Where will you go? / What will you say? 並代入祝福句。',
+    steps:['指圖說出 restaurant、bookstore、stationery shop、pet shop。','用中文問店家提供什麼，再認識教材單字。','示範 Where will you go?／What will you say?','全班跟說，再替換店型。','兩人輪流練習。'],
+    demoTitle:'書店示範',
+    dialog:['A: Where will you go?','B: I will go to the bookstore.','A: What will you say?','B: Merry Christmas and Happy New Year!<br>Thank you for the wonderful books!<br>Your shop is so pretty!<br>I hope you have a happy Christmas!'],
+    check:'店型與感謝內容是否對應，是否能在提示下說出祝福。',
+  },
+  LU:{
+    purpose:'認識四種店家對社區的服務，練習完整四句問答並選定想拜訪的店家。',
+    steps:['問「這間店為大家做什麼？」。','帶學生完成 They…。','示範四組問答。','全班替換一次。','同儕練習並交換角色。'],
+    serviceTable:[
+      {shop:'Restaurant', they:'They make food.', why:'Because they make food.', like:'I like their menu.'},
+      {shop:'Bookstore', they:'They sell books.', why:'Because they sell books.', like:'I like their books.'},
+      {shop:'Stationery shop', they:'They sell school supplies.', why:'Because they sell school supplies.', like:'I like their pencils.'},
+      {shop:'Pet shop', they:'They sell pet supplies.', why:'Because they sell pet supplies.', like:'I like their pet toys.'},
+    ],
+    serviceNote:'以實際服務為準，不預設寵物店一定提供照護或救援。',
+    dialog:['A: Which shop will you visit?','B: I will visit the <span class="blank">___</span>.','A: Why?','B: Because they <span class="blank">___</span>.','A: What do you like there?','B: I like their <span class="blank">___</span>.','A: How will you bless them?','B: I will say “Merry Christmas!”'],
+    check:'檢查四個答案是否前後呼應（例如選了 bookstore，喜歡的內容也要跟書有關）；其他行動依店家任務進行，不把「說祝福」與「送卡」寫成二選一。',
+  },
+  SJ:{
+    purpose:'訪問同學，討論店家對社區的貢獻、對方偏好及祝福方式，並寫下短筆記。',
+    steps:['學生選擇想拜訪的店家。','訪問同學，依教材四題提問。','記錄短筆記，不急著要求完整文章。','老師追問：「你根據什麼資料這樣想？」','再用筆記準備卡片內容。'],
+    noteSample:[['Shop','bookstore'],['Reason','I like reading.'],['Service','books for our neighborhood'],['Extra action','a card, if requested'],['Blessing','Merry Christmas!']],
+    dialog:['1. Which shop will you visit? Why?','2. What does the shop do for our neighborhood?','3. What else would the shop like: a card or a drawing? Why?','4. What will you say to them?'],
+    check:'能區分已知店家資訊與自己的猜測。未提供偏好時，不能把猜測寫成店家正式要求。',
+  },
+};
+
+const EX2_AP_REJECTED = ['Thank you for your help!','Thank you for making…','Thank you for selling…','Thank you for helping animals!'];
+const EX2 = {
+  AP:{
+    note:'感謝句統一使用「Thank you for the ___!」（最新決議），不要改成 your help／making／selling／helping animals 等方案。',
+    fields:['To: ___','Merry Christmas!（描紅）','Thank you for the ___!','Your shop is so ___!','I hope you have a ___ Christmas!','From: ___'],
+    shops:{
+      restaurant:{thanks:'delicious food', compliment:'cozy', wish:'happy'},
+      bookstore:{thanks:'wonderful books', compliment:'pretty', wish:'merry'},
+      stationery:{thanks:'lovely stationery', compliment:'cute', wish:'happy'},
+      pet:{thanks:'pet supplies', compliment:'cute', wish:'warm'},
+    },
+    build(s){return `To: [店家名稱]<br>Merry Christmas!<br>Thank you for the ${s.thanks}!<br>Your shop is so ${s.compliment}!<br>I hope you have a ${s.wish} Christmas!<br>From: [學生姓名]`},
+    steps:['選收件店家。','選對應感謝詞組。','看照片選 pretty／cute／cozy。','選 happy／merry／warm。','完成署名。'],
+    guide:'逐句進行上方 5 個步驟；Warm 可表示充滿溫暖與心意，不只指氣溫。未吃過餐點時，不要求學生宣稱自己的食用經驗。',
+    check:'固定文字是否照抄正確、空格是否從詞庫中選字（而非任意造詞）、字跡是否可讀。',
+  },
+  LU:{
+    note:'保留收件人、聖誕祝福、感謝、喜好、店家稱讚、My sentence、祝願與署名。',
+    fields:['To: ___','Merry Christmas!','Thank you for the ___!','I love your ___!','Your shop is so ___!','My sentence: ___','I hope you have a ___ Christmas!','From: ___'],
+    shops:{
+      restaurant:{thanks:'the delicious food', love:'menu', compliment:'cozy', sentence:'Your shop makes me happy!', wish:'happy'},
+      bookstore:{thanks:'the wonderful books', love:'books', compliment:'beautiful', sentence:'Reading makes me happy!', wish:'merry'},
+      stationery:{thanks:'the lovely stationery', love:'pencils', compliment:'cute', sentence:'I can find what I need here.', wish:'happy'},
+      pet:{thanks:'the pet supplies', love:'pet toys', compliment:'friendly', sentence:'Pets are our friends.', wish:'warm'},
+    },
+    build(s){return `To: [店家名稱]<br>Merry Christmas!<br>Thank you for ${s.thanks}!<br>I love your ${s.love}!<br>Your shop is so ${s.compliment}!<br>My sentence: ${s.sentence}<br>I hope you have a ${s.wish} Christmas!<br>From: [學生姓名]`},
+    guide:'感謝內容連到店家提供的事物；I love your… 連到自己的喜好；Your shop is so… 連到環境或整體感受；My sentence 加一句自己的話。「My sentence:」是學習單欄位名稱，正式卡片不必抄這個標籤。範例供選擇，不要求學生宣稱不符合自己的喜好或經驗。',
+    check:'My sentence 是否為完整句子、是否與該店家相關。',
+  },
+  SJ:{
+    note:'依 Card Formula：To＋name／Greeting／Thank you＋why／What I love／My wish／From＋name。',
+    fields:['To: ___','Merry Christmas!','Thank you for ___ (why)','I really love ___ because ___.','I hope you and your family have a ___ Christmas and a ___ New Year!','From: ___'],
+    shops:{
+      restaurant:{thanksLine:'Thank you for the delicious food you make for our neighborhood.', loveLine:'I really love your cozy shop because it feels welcoming.', wishLine:'I hope you and your family have a joyful Christmas and a happy New Year!'},
+      bookstore:{thanksLine:'Thank you for the wonderful books you bring to our neighborhood.', loveLine:'I really love your books because they help me discover new things.', wishLine:'I hope you and your family have a wonderful Christmas filled with good stories!'},
+      stationery:{thanksLine:'Thank you for the school supplies you provide.', loveLine:'I really love your colorful stationery because it gives me ideas for my cards.', wishLine:'I hope you and your family have a happy Christmas and a creative New Year!'},
+      pet:{thanksLine:'Thank you for the pet supplies you provide for our neighborhood.', loveLine:'I really love your pet toys because they look fun and colorful.', wishLine:'I hope you and your family have a warm and joyful Christmas!'},
+    },
+    build(s){return `To: [店家名稱]<br>Merry Christmas!<br>${s.thanksLine}<br>${s.loveLine}<br>${s.wishLine}<br>From: [學生姓名]`},
+    guide:'先說出感謝的事物；補充與店家或社區的關聯；喜好後加一個理由；寫出祝願與署名。不要求背範例的新單字，老師協助學生用會用的字表達。',
+    check:'「because」後面的原因是否具體合理、是否沒有虛構學生未曾有過的消費或被幫助經驗。',
+  },
+};
+const EX2_SAMPLE_FLOW = ['老師示範一張，不是要求全班一次寫四張。','學生先口說想填的內容。','在學習單完成自己的 sample。','老師檢查後，作為正式卡片的參考。'];
+const EX2_SAMPLE_NOTE = '四店範例都放在網站供老師選用，不能讓學生誤以為四種店都必須寫。';
+const SHOP_ORDER = ['restaurant','bookstore','stationery','pet'];
+const SHOP_NAME = {restaurant:'restaurant 餐廳', bookstore:'bookstore 書店', stationery:'stationery shop 文具店', pet:'pet shop 寵物店'};
+
+const LESSON3_FLOW = '等待 → 打招呼、說祝福 → 依任務行動 → 適當互動 → 禮貌結束。';
+const LESSON3_TEACHER_OPS = ['老師演孩子，一位學生演店員。','示範一次完整互動。','兩人練習。','交換角色。','加入情境，確認孩子知道怎麼調整。','老師巡視，個別聽學生說祝福與結束語。'];
+const LESSON3 = {
+  AP:{lines:['Hello! Merry Christmas!','Thank you for the wonderful books!','（需要送卡時）This card is for you!','Bye-bye!']},
+  LU:{lines:['Hello! Merry Christmas!','Thank you for the wonderful books!','Your shop is so cozy!','（需要送卡時）This card is for your shop!','（適合聊天時）What do you recommend?','Thank you! Have a nice day!']},
+  SJ:{lines:['Hello! Merry Christmas!','Thank you for the wonderful books!','I love your books because they help me discover new things.','（需要送卡時）This card is for your shop!','（適合聊天時）What do you recommend?','Thank you for your time. Have a wonderful Christmas!']},
+};
+const SCENARIOS = [
+  {t:'店員忙碌', d:'等待，不急著插話。'},
+  {t:'忘記台詞', d:'看卡片，陪同家人可以提示。'},
+  {t:'聽不清楚', d:'面向對方，適度提高音量，再說一次。'},
+  {t:'店員沒有時間聊天', d:'省略延伸提問，禮貌結束。'},
+  {t:'店員推薦商品', d:'可以道謝，不代表必須購買。'},
+  {t:'該店沒有送卡任務', d:'依正式任務進行，不自行增加通關條件。'},
+];
+const SJ_EXTRA = ['明確標示「選用」。','由家長或照顧者協助。','評論應反映真實體驗。','拍照先詢問。','不要求五星，不把打卡或評論當成必要任務。'];
+
+const WEEKLY = [
+  {date:'11/2–11/6', text:'Level 2 口說開跑：Outdoor Sentence。', link:null},
+  {date:'11/9–11/13', text:'Outdoor Sentence；週五教材到貨，分派各校。', link:null},
+  {date:'11/16–11/20', text:'A Plus Christmas Walk 第一面。', link:['lesson1']},
+  {date:'11/23–11/27', text:'第一面複習、收尾；Lesson 2 與對話練習。', link:['lesson2']},
+  {date:'11/30–12/4', text:'Exercise 2 學習單 sample；Lesson 3。', link:['ex2','lesson3']},
+  {date:'12/7–12/11', text:'正式卡片文字課。', link:['cardcourse']},
+  {date:'12/14–12/18', text:'Level 2 階級考；持續寫卡片，複習到店祝福台詞。', link:['lesson3']},
+];
+
+const RULES = [
+  '每間合作店家都要現場說英文祝福。',
+  '其他行動依該店任務進行。',
+  '完成活動需三間不同合作店家的任務與 App 回答。',
+  '每生於活動過程共取得五張卡片，自由選擇收件店家。',
+  '五張卡片不等於必須拜訪五間店。',
+  '不需錄製學生祝福。',
+  '消費、拍照、打卡及評論皆為自願。',
+  '正式口說評分依 Outdoor Sentence 表現，不新增聖誕教材正式口說考試。',
+  '闖關期間：2026/12/11–12/28。領獎期間：2026/12/14–12/31。',
+];
+const CARD_PIPELINE = '學習單寫一張 sample → 正式卡片文字課 → 回教學教室美編 → 到店送祝福';
+const CARD_PIPELINE_NOTE = '英語課負責文字教學與檢查，圖畫、著色及裝飾回教學教室完成。';
+const PREP_LIST = [
+  '該年級教材。',
+  '影片播放設備。',
+  '實際合作店家資料；尚未提供時先使用教材四種店型。',
+  '卡片與書寫文具。',
+  '本網站的卡片示範及教師檢查清單。',
+];
+
+const PENDING = [
+  '正式合作店家名單、照片與介紹。',
+  '各店偏好、任務及接待資訊。',
+  'App 正式入口與操作。',
+  '通過規則、異常處理與求助窗口。',
+  '正式口說評分規準（如未提供則不顯示虛構標準）。',
+];
+
+const CARD_CHECK = ['收件人是否正確？','感謝內容是否符合店家？','稱讚是否真實、合理？','有沒有祝願與署名？','字跡是否可讀？','句首大寫、基本標點是否完成？'];
+const CARD_FLOW = ['找出自己的學習單 sample。','選這次要寫的店家。','說出哪些文字可以沿用、哪些需要替換。','在草稿或練習紙確認英文。','老師檢查。','謄寫正式卡片。','在卡片檢查表記錄完成情況。','回教學教室進行美編。'];
+const CARD_PRE = '請學生想好想寫給哪些店家；使用正式資料了解名稱、服務與任務。';
+const CARD_CHECK_BY_GRADE = {
+  AP:'句子完整、選字合適、店名與署名正確。',
+  LU:'內容與店家相符，喜好與稱讚句正確，My sentence 已完成。',
+  SJ:'內容具體、理由清楚、整張卡片有連貫性。',
+};
+
+/* =========================================================================
+   小工具
+   ========================================================================= */
+function fmtTime(t){ return '0:'+String(t).padStart(2,'0'); }
+
+function countryPrepHTML(){
+  return COUNTRIES.map(c=>`
+    <div class="prep-card">
+      <div class="prep-card-inner">
+        <img src="${c.flag}" alt="${c.name}">
+        <div>
+          <b>${c.name}</b> <span class="pill pill-flame" style="margin-left:4px">${c.greeting}</span>
+          <p class="quickteach" style="color:var(--ink);font-weight:700;margin:.4em 0 0">${c.title}</p>
+          <p class="quickteach"><b>課堂開場問題：</b>${c.hook}</p>
+          <p class="quickteach"><b>上課簡短介紹：</b>${c.intro}</p>
+          <details class="teacher-detail">
+            <summary>教師備課（約 2–3 分鐘可讀完）</summary>
+            <div class="inner">
+              ${c.prep.map(p=>`<p>${p}</p>`).join('')}
+              <h5>延伸提問</h5>
+              <ul>${c.extendQ.map(q=>`<li>${q}</li>`).join('')}</ul>
+              <h5>教學連結</h5><p>${c.bridge}</p>
+              <h5>資料來源</h5><p><a href="${c.sourceUrl}" target="_blank" rel="noopener">${c.sourceName}</a></p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function songCardHTML(s){
+  return `<div class="song-card">
+    <div class="video-wrap"><iframe src="https://www.youtube.com/embed/${s.id}" title="${s.artist} - ${s.title}" allow="encrypted-media" loading="lazy" allowfullscreen></iframe></div>
+    <div>
+      <b style="font-family:var(--font-disp);font-size:1.05rem">${s.artist} — ${s.title}</b>
+      <p style="margin:.5em 0">${s.about}</p>
+      <p style="margin:.4em 0"><span class="pill pill-pine" style="margin-right:6px">老師介紹</span>${s.teacherLine}</p>
+      <p style="margin:.5em 0 .2em"><b>帶法：</b></p>
+      <ol style="padding-left:1.2em;margin:0 0 .6em">${s.steps.map(x=>`<li>${x}</li>`).join('')}</ol>
+      <p class="fallback-link"><a href="https://www.youtube.com/watch?v=${s.id}" target="_blank" rel="noopener">在 YouTube 開啟</a></p>
+    </div>
+  </div>`;
+}
+
+/* =========================================================================
+   狀態
+   ========================================================================= */
+let currentPageKey = 'home';
+
+function setGrade(key){
+  currentGrade = key;
+  localStorage.setItem('xmas2026_grade', key);
+  render();
+}
+
+function go(target){
+  const [page, seg, grade] = target.split(':');
+  if(grade) { currentGrade = grade; localStorage.setItem('xmas2026_grade', grade); }
+  currentPageKey = page;
+  if(seg){
+    currentSeg = seg;
+    const z = ZONES.find(z=>z.seg===seg);
+    if(z) currentTbPage = z.page;
+  }
+  render();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function setSeg(seg){
+  currentSeg = seg;
+  const z = ZONES.find(z=>z.seg===seg);
+  if(z) currentTbPage = z.page;
+  renderGuidePage();
+}
+
+function toggleProjector(){
+  projector = !projector;
+  document.body.classList.toggle('projector', projector);
+  document.getElementById('projToggle').classList.toggle('on', projector);
+  if(projector){
+    document.querySelectorAll('details.teacher-detail').forEach(d=>d.removeAttribute('open'));
+    const list = document.getElementById('ex1List');
+    if(list) list.classList.remove('show-answers');
+    const btn = document.getElementById('ex1AnswerToggle');
+    if(btn) btn.textContent = '顯示解答';
+  }
+}
+
+function jumpVideo(t){
+  const iframe = document.getElementById('mainVideo');
+  if(iframe) iframe.src = `https://www.youtube.com/embed/g0RoLcCOqfE?start=${t}&autoplay=1`;
+  document.querySelectorAll('.video-jump button').forEach(b=>b.removeAttribute('aria-current'));
+  const btn = [...document.querySelectorAll('.video-jump button')].find(b=>Number(b.dataset.t)===t);
+  if(btn) btn.setAttribute('aria-current','true');
+}
+
+function openLightbox(src){
+  document.getElementById('modalRoot').innerHTML = `<div class="modal-backdrop"><div class="modal-box" style="padding:10px;max-width:1100px"><button class="modal-close" aria-label="關閉">×</button><img src="${src}" style="width:100%;border-radius:10px"></div></div>`;
+}
+function openGallery12(){
+  const allCards = Object.keys(GRADES).map(gk=>{
+    const E = EX2[gk];
+    return SHOP_ORDER.map(k=>{
+      const s = E.shops[k];
+      return `<div class="card-sample"><div class="shoplabel"><img src="${ASSETS.shops[k]}" alt=""><b>${GRADES[gk].short} · ${SHOP_NAME[k]}</b></div><div class="line">${E.build(s)}</div></div>`;
+    }).join('');
+  }).join('');
+  document.getElementById('modalRoot').innerHTML = `<div class="modal-backdrop"><div class="modal-box"><button class="modal-close" aria-label="關閉">×</button><h3 style="color:var(--flame)">十二張卡片範例（三年級 × 4 店家）</h3><div class="gallery12">${allCards}</div></div></div>`;
+}
+function closeModal(){ document.getElementById('modalRoot').innerHTML = ''; }
+
+/* =========================================================================
+   各段教學指引內容（教學指引頁右側）
+   ========================================================================= */
+function panelOpen(){
+  return `
+  <h3>🎄 開場：Warm Christmas Blessings <span class="pill pill-pine">三年級共用</span></h3>
+  <p class="task-callout"><b>本段目的：</b>讓孩子知道這份教材為什麼學、最後會用在哪裡。</p>
+  <div class="step"><div class="n">1</div><div><b>老師怎麼開場</b><p>「今年聖誕節，我們要把祝福送進社區裡的店家。接下來幾週，我們會認識不同國家的聖誕文化，學習用英文說祝福，也會在課堂上練習寫卡片。最後，你會和家人一起到店裡，親口把心意送給對方。」</p></div></div>
+  <div class="step"><div class="n">2</div><div><b>教師示範／提問</b><p>先讓孩子用中文分享，再帶入英文：</p><ul class="rule-list"><li>你平常會和家人去哪些店？</li><li>這些店讓我們的生活多了什麼方便？</li><li>如果你是店員，收到什麼樣的祝福會覺得開心？</li></ul></div></div>
+  <div class="step"><div class="n">3</div><div><b>學生練習／老師收束</b><p>請 2–3 位學生簡短分享答案，老師收束：「每個人喜歡的祝福不一定相同。所以我們要先認識對方，再準備適合他的心意。」</p></div></div>
+  <div class="step"><div class="n">4</div><div><b>老師怎麼檢查</b><p>請孩子回答：「到每間店都一定要做什麼？」「一定要買東西才能參加嗎？」預期回答：現場說英文祝福；不需要消費。</p></div></div>
+  <p class="pill pill-gold">轉場：「我們先來看看，世界各地的人會怎麼說『聖誕快樂』！」</p>
+  <button class="btn btn-ghost btn-sm" data-goto="guide:lesson1" type="button" style="margin-top:10px">前往 Lesson 1 →</button>
+  `;
+}
+
+function panelLesson1(){
+  const g = currentGrade;
+  const demoMap = {
+    AP: '「先選三種你想學的說法，聽一聽，再對朋友說一次。」',
+    LU: 'A: How do you say Merry Christmas in Japan?<br>B: Merii Kurisumasu!',
+    SJ: 'In Germany, people say “Frohe Weihnachten!”',
+  };
+  const practiceMap = {
+    AP: ['全班跟讀。','每人選三種語言，向同學說聖誕快樂。','同學指出正在說哪個國家的祝福。'],
+    LU: ['老師先問，全班回答。','兩人各選三個國家提問。','交換角色。'],
+    SJ: ['選一句祝福，先聽音檔。','教同學說一次。','使用 “In ____, people say ‘____.’” 說明國家與祝福。','交換角色。'],
+  };
+  const checkMap = {
+    AP: '能看教材找到正確國家並開口模仿，不要求背完六國。',
+    LU: '三組問答是否都能完整對答，角色是否確實交換。',
+    SJ: '國家與祝福是否搭配，能否讓同學跟著說。',
+  };
+  const difficultyMap = {
+    AP: null,
+    LU: '問句太長時，分成：How do you say / Merry Christmas / in Japan? 先分段，再完整說一次。',
+    SJ: null,
+  };
+  return `
+  <h3>Lesson 1 · Christmas Around the World <span class="pill pill-sky">${GRADES[g].short}</span></h3>
+  <p class="task-callout"><b>本段目的：</b>認識六國聖誕祝福用語，建立向不同對象問候的基礎。</p>
+  <p style="color:var(--muted);font-size:.86rem">共用流程：①看教材圖卡，觀察國旗與地標 ②老師確認國名，簡單指出位置 ③播放六國祝福影片 ④第一次先聽，第二次分段跟讀 ⑤老師播放其中一段，學生指出對應國家，再說一次 ⑥進行該年級的同儕練習</p>
+
+  <div class="step"><div class="n">1</div><div><b>老師怎麼開場</b><p>展示六張國旗圖卡，問全班：「這些國旗你認得幾個？你猜得出哪一面是哪個國家嗎？」</p></div></div>
+  <div class="step"><div class="n">2</div><div><b>教師示範</b><p>${demoMap[g]}</p></div></div>
+  <div class="step"><div class="n">3</div><div><b>學生練習</b><ul class="rule-list">${practiceMap[g].map(x=>`<li>${x}</li>`).join('')}</ul></div></div>
+  <div class="step"><div class="n">4</div><div><b>老師檢查重點</b><p>${checkMap[g]}</p></div></div>
+
+  <div class="video-wrap"><iframe id="mainVideo" src="https://www.youtube.com/embed/g0RoLcCOqfE" title="六國祝福影片" allow="encrypted-media" allowfullscreen loading="lazy"></iframe></div>
+  <div class="video-jump">${COUNTRIES.map(c=>`<button data-t="${c.t}">${c.name.split(' ')[0]} ${fmtTime(c.t)}</button>`).join('')}</div>
+  <p class="fallback-link">若影片因瀏覽器限制無法播放：<a href="https://www.youtube.com/watch?v=g0RoLcCOqfE" target="_blank" rel="noopener">在 YouTube 開啟六國祝福影片</a></p>
+
+  <div class="country-grid">${COUNTRIES.map(c=>`<div class="country-card"><img src="${c.flag}" alt="${c.name}"><div class="cc-body"><b>${c.name}</b><span>${c.greeting}</span></div></div>`).join('')}</div>
+
+  <details class="teacher-detail" style="margin-top:14px">
+    <summary>教師備課：常見困難與備註</summary>
+    <div class="inner">
+      ${difficultyMap[g] ? `<h5>常見困難</h5><p>${difficultyMap[g]}</p>` : ''}
+      <h5>教師備註</h5>
+      <ul>
+        <li>這是跨文化接觸與模仿練習，不要求以外語母語者的發音作為通過門檻。</li>
+        <li>澳洲與英國都使用英語；mate 是親切的口語稱呼。</li>
+        <li>文化故事留在 Exercise 1 展開，不在本區一次講完。</li>
+      </ul>
+    </div>
+  </details>
+  <button class="btn btn-ghost btn-sm" data-goto="guide:ex1" type="button" style="margin-top:12px">前往 Exercise 1 深入文化 →</button>
+  `;
+}
+
+function panelEx1(){
+  const stmts = EX1[currentGrade];
+  const clues = EX1_CLUES[currentGrade];
+  const rows = stmts.map((s,i)=>`<div class="ex1-row"><div class="num">${i+1}</div><div>${s}<br><span class="ex1-answer">→ ${COUNTRIES.find(c=>c.key===EX1_ANSWERS[i]).name}　判斷線索：${clues[i]}</span></div></div>`).join('');
+  return `
+  <h3>Exercise 1 · Christmas Fun Facts <span class="pill pill-sky">${GRADES[currentGrade].short}</span></h3>
+  <p class="task-callout"><b>本段目的：</b>透過找線索、配對與訂正，認識六國聖誕文化重點。</p>
+  <p style="color:var(--muted);font-size:.86rem">${EX1_INSTR[currentGrade]}　共用流程：先提問 → 簡短文化介紹 → 回到英文找線索 → 個人配對 → 同儕核對 → 全班訂正。不要一開始就公布答案。</p>
+
+  <div class="step"><div class="n">1</div><div><b>老師怎麼開場</b><p>用其中一題線索引起好奇，例如先問：「有一個國家，聖誕節是夏天，你猜是哪裡？」</p></div></div>
+  <div class="step"><div class="n">2</div><div><b>教師示範</b><p>帶讀六句線索，逐句簡短補充文化背景（下方每個國家都有可展開的教師備課）。</p></div></div>
+  <div class="step"><div class="n">3</div><div><b>學生練習</b><p>學生先個人配對線索與國家，再與同儕核對答案。</p></div></div>
+  <div class="step"><div class="n">4</div><div><b>老師檢查重點</b><p>學生不只完成連線，也能指出至少一項判斷線索。答錯時回到關鍵詞與圖像，不只公布正解。訂正時可以問：</p><ul class="rule-list">${EX1_CORRECT_Q.map(q=>`<li>${q}</li>`).join('')}</ul></div></div>
+
+  <div style="display:flex;justify-content:flex-end;margin:10px 0"><button class="btn btn-ghost btn-sm" id="ex1AnswerToggle" type="button">顯示解答</button></div>
+  <div id="ex1List">${rows}</div>
+  <details class="teacher-detail" style="margin-top:14px"><summary>配對欄國家順序（教材固定順序，供核對用）</summary><div class="inner">${MATCH_ORDER.map(k=>`<div style="font-size:.88rem;padding:3px 0">${COUNTRIES.find(c=>c.key===k).name}</div>`).join('')}</div></details>
+
+  <h4 style="margin-top:22px;color:var(--pine)">六國文化備課</h4>
+  <p style="font-size:.82rem;color:var(--muted)">${COUNTRY_NOTE}</p>
+  ${countryPrepHTML()}
+  <button class="btn btn-ghost btn-sm" data-goto="guide:fav" type="button" style="margin-top:14px">前往 My Favorite →</button>
+  `;
+}
+
+function panelFav(){
+  const steps = `
+  <div class="step"><div class="n">1</div><div><b>老師怎麼開場</b><p>問學生：「你最喜歡哪一個國家的聖誕節？為什麼？」</p></div></div>
+  <div class="step"><div class="n">2</div><div><b>教師示範</b><p>老師先示範一到兩句，再請學生看範例句替換。</p></div></div>
+  <div class="step"><div class="n">3</div><div><b>學生練習</b><p>學生練習造句並與同學分享（Tell a friend!）。</p></div></div>
+  <div class="step"><div class="n">4</div><div><b>老師檢查重點</b><p>句子是否完整、是否敢大方分享；不設唯一答案。</p></div></div>`;
+  const purpose = `<p class="task-callout"><b>本段目的：</b>練習用句型表達個人偏好與理由。</p>`;
+  const jump = `<button class="btn btn-ghost btn-sm" data-goto="guide:jukebox" type="button" style="margin-top:12px">前往 Jukebox →</button>`;
+  if(currentGrade==='AP'){
+    const F = FAVORITE.AP;
+    return `<h3>My Favorite!</h3>${purpose}${steps}
+    <div class="dialog-box"><b>句型：</b>${F.frame}</div>
+    <div class="wordbank">${F.examples.map(e=>`<span>${e}</span>`).join('')}</div>
+    <p style="font-size:.85rem;color:var(--muted);margin-top:8px">${F.note}</p>${jump}`;
+  }
+  if(currentGrade==='LU'){
+    const F = FAVORITE.LU;
+    return `<h3>My Favorite / Tell a friend!</h3>${purpose}${steps}
+    <div class="dialog-box"><b>句型：</b>${F.frame}</div>
+    <div class="wordbank">${F.examples.map(e=>`<span>${e}</span>`).join('')}</div>
+    <div class="dialog-box" style="margin-top:12px"><b>句型：</b>${F.frame2}</div>
+    <div class="wordbank">${F.examples2.map(e=>`<span>${e}</span>`).join('')}</div>
+    <p style="font-size:.85rem;color:var(--muted);margin-top:8px">${F.note}</p>${jump}`;
+  }
+  const F = FAVORITE.SJ;
+  const full = F.examples.map(([c,act,why])=>`I want to spend Christmas in ${c}. I want to ${act} there because ${why}.`);
+  return `<h3>My Choice</h3>${purpose}${steps}
+  <div class="dialog-box"><b>句型：</b>${F.frame}<br>${F.frame2}</div>
+  <div class="wordbank" style="flex-direction:column;align-items:flex-start">${full.map(e=>`<span>${e}</span>`).join('')}</div>
+  <p style="font-size:.85rem;color:var(--muted);margin-top:8px">${F.note}</p>${jump}`;
+}
+
+function panelJukebox(){
+  return `
+  <h3>Christmas Jukebox</h3>
+  <p class="task-callout"><b>本段目的：</b>透過歌曲延伸認識聖誕氣氛與墨西哥祝福語。</p>
+  <p style="color:var(--muted);font-size:.86rem">${JUKEBOX_NOTE}</p>
+  ${JUKEBOX.map(songCardHTML).join('')}
+  <p style="margin-top:10px;font-size:.85rem;color:var(--muted)">${JUKEBOX_END}</p>
+  <p style="margin-top:10px;font-size:.9rem">🎶 完整播放清單（含六國祝福影片＋三首歌曲，教材 QR code 連至此清單）：<br><a href="${PLAYLIST_URL}" target="_blank" rel="noopener">${PLAYLIST_URL}</a></p>
+  <button class="btn btn-ghost btn-sm" data-goto="guide:lesson2" type="button" style="margin-top:12px">前往 Lesson 2 →</button>
+  `;
+}
+
+function panelLesson2(){
+  const g = currentGrade;
+  const L = LESSON2[g];
+  const jump = `<button class="btn btn-ghost btn-sm" data-goto="guide:ex2" style="margin-top:12px" type="button">查看 Exercise 2 卡片範例 →</button>`;
+  let openStep, demoStep, practiceStep, checkStep, extraDetail = '';
+  if(g==='AP'){
+    openStep = '指圖說出 restaurant、bookstore、stationery shop、pet shop；用中文問店家提供什麼，再認識教材單字。';
+    demoStep = `<p>逐句示範 Where will you go?／What will you say?</p><div class="dialog-box"><b>${L.demoTitle}</b><br>${L.dialog.join('<br>')}</div>`;
+    practiceStep = '全班跟說，再替換店型；兩人輪流練習。';
+    checkStep = L.check;
+  } else if(g==='LU'){
+    const tbl = `<div class="scrollx"><table class="weektable" style="border-spacing:0 6px;width:100%"><tbody>
+      <tr><td style="font-weight:700;color:var(--pine)">店型</td><td style="font-weight:700;color:var(--pine)">They…</td><td style="font-weight:700;color:var(--pine)">Why?</td><td style="font-weight:700;color:var(--pine)">What do you like there?</td></tr>
+      ${L.serviceTable.map(r=>`<tr><td><b>${r.shop}</b></td><td>${r.they}</td><td>${r.why}</td><td>${r.like}</td></tr>`).join('')}
+    </tbody></table></div>`;
+    openStep = '問「這間店為大家做什麼？」帶學生完成 They…。';
+    demoStep = `<p>示範四組問答：</p>${tbl}<div class="dialog-box" style="margin-top:8px">${L.dialog.join('<br>')}</div>`;
+    practiceStep = '全班替換一次；兩人一組同儕練習並交換角色。';
+    checkStep = L.check;
+    extraDetail = `<p style="font-size:.82rem;color:var(--muted);margin-top:6px">${L.serviceNote}</p>`;
+  } else {
+    openStep = '學生選擇想拜訪的店家。';
+    demoStep = `<p>訪問同學，依教材四題提問：</p><div class="dialog-box" style="margin-top:8px">${L.dialog.join('<br>')}</div>`;
+    practiceStep = '記錄短筆記，不急著要求完整文章；再用筆記準備卡片內容。';
+    checkStep = `老師追問：「你根據什麼資料這樣想？」${L.check}`;
+    extraDetail = `<details class="teacher-detail" style="margin-top:10px"><summary>更多示範：可接受的筆記範例</summary><div class="inner">${L.noteSample.map(([k,v])=>`<p><b>${k}:</b> ${v}</p>`).join('')}</div></details>`;
+  }
+  return `
+  <h3>Lesson 2 · 認識店家 <span class="pill pill-sky">${GRADES[g].short}</span></h3>
+  <p class="task-callout"><b>本段目的：</b>${L.purpose}</p>
+  <p style="color:var(--muted);font-size:.86rem">${LESSON2_OPEN}<br><i>${LESSON2_OPEN_NOTE}</i></p>
+  <div class="step"><div class="n">1</div><div><b>老師怎麼開場</b><p>${openStep}</p></div></div>
+  <div class="step"><div class="n">2</div><div><b>教師示範</b>${demoStep}</div></div>
+  <div class="step"><div class="n">3</div><div><b>學生練習</b><p>${practiceStep}</p></div></div>
+  <div class="step"><div class="n">4</div><div><b>老師檢查重點</b><p>${checkStep}</p></div></div>
+  ${extraDetail}
+  <p class="pill pill-flame" style="margin-top:10px">Always say your blessing in English. Follow the shop's mission.</p>
+  <div class="country-grid" style="grid-template-columns:repeat(auto-fit,minmax(110px,1fr))">
+    ${SHOP_ORDER.map(k=>`<div class="country-card"><img src="${ASSETS.shops[k]}" alt="${SHOP_NAME[k]}" style="height:90px;object-fit:contain;padding:10px;background:#fff"><div class="cc-body"><b>${SHOP_NAME[k]}</b></div></div>`).join('')}
+  </div>
+  ${jump}
+  `;
+}
+
+function panelEx2(){
+  const g = currentGrade;
+  const E = EX2[g];
+  const cards = SHOP_ORDER.map(k=>{
+    const s = E.shops[k];
+    return `<div class="card-sample"><div class="shoplabel"><img src="${ASSETS.shops[k]}" alt=""><b>${SHOP_NAME[k]}</b></div><div class="line">${E.build(s)}</div></div>`;
+  }).join('');
+  const rejected = g==='AP' ? `<div class="callout callout-amber" style="margin:10px 0">
+    <h4>最新決議</h4>
+    <p style="margin-bottom:6px">感謝句維持 <b>“Thank you for the _____!”</b>，不要改成：</p>
+    <ul class="rule-list" style="margin-bottom:0">${EX2_AP_REJECTED.map(x=>`<li>${x}</li>`).join('')}</ul>
+  </div>` : '';
+  return `
+  <h3>Exercise 2 · My Christmas Card Plan <span class="pill pill-sky">${GRADES[g].short}</span></h3>
+  <p class="task-callout"><b>本段目的：</b>練習把祝福寫成一張完整的卡片 sample。</p>
+  <p style="font-size:.86rem;color:var(--muted)">${E.note}</p>
+  ${rejected}
+  <div class="step"><div class="n">1</div><div><b>老師怎麼開場</b><p>老師示範一張，不是要求全班一次寫四張。</p></div></div>
+  <div class="step"><div class="n">2</div><div><b>教師示範</b><p>${E.guide}</p></div></div>
+  <div class="step"><div class="n">3</div><div><b>學生練習</b><p>學生選一種店家，先口說想填的內容，再依固定欄位完成自己的 sample：${E.fields.join('／')}</p></div></div>
+  <div class="step"><div class="n">4</div><div><b>老師檢查重點</b><p>${E.check}</p></div></div>
+  <p style="font-size:.82rem;color:var(--muted)">${EX2_SAMPLE_NOTE}</p>
+
+  <h4 style="color:var(--pine);margin-top:18px">本年級 4 種店家範例</h4>
+  <div class="gallery12" style="margin-top:10px">${cards}</div>
+  <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn btn-ghost btn-sm" id="openGallery12" type="button">查看全部 12 張範例（三年級 × 4 店家）</button>
+    <button class="btn btn-ghost btn-sm" data-goto="cardcourse" type="button">前往正式卡片文字課 →</button>
+  </div>
+  `;
+}
+
+function panelLesson3(){
+  const g = currentGrade;
+  const L3 = LESSON3[g];
+  const extra = g==='SJ' ? `
+    <div class="callout callout-sky" style="margin-top:14px">
+      <h4>高年級 Extra：Check In &amp; Comment（選用）</h4>
+      <ul class="rule-list" style="margin-bottom:0">${SJ_EXTRA.map(x=>`<li>${x}</li>`).join('')}</ul>
+    </div>` : '';
+  return `
+  <h3>Lesson 3 · 到店互動 <span class="pill pill-sky">${GRADES[g].short}</span></h3>
+  <p class="task-callout"><b>本段目的：</b>練習到店當面說出英文祝福並完成任務。</p>
+  <p style="color:var(--muted);font-size:.86rem">共用流程：${LESSON3_FLOW}</p>
+
+  <div class="step"><div class="n">1</div><div><b>老師怎麼開場</b><p>老師說明今天要練習到店互動的完整流程。</p></div></div>
+  <div class="step"><div class="n">2</div><div><b>教師示範</b><div class="dialog-box" style="margin-top:6px">${L3.lines.join('<br>')}</div><p style="font-size:.85rem;color:var(--muted);margin-top:6px">以上以書店示範；替換其他店型時，把商品名詞與稱讚語一起換掉即可（例如 books → noodles／pencils／pets，cozy → warm／friendly 等）。依實際店家替換內容。</p></div></div>
+  <div class="step"><div class="n">3</div><div><b>學生練習</b><p>兩人一組角色扮演，練習後交換角色。</p></div></div>
+  <div class="step"><div class="n">4</div><div><b>老師怎麼檢查</b><p>允許拿卡片說，不要求背整張卡片。這是形成性練習，不新增正式口說考試。</p></div></div>
+
+  <details class="teacher-detail">
+    <summary>教師操作步驟</summary>
+    <div class="inner"><ol style="padding-left:1.2em">${LESSON3_TEACHER_OPS.map(x=>`<li>${x}</li>`).join('')}</ol></div>
+  </details>
+  <details class="teacher-detail">
+    <summary>常見情境與處理</summary>
+    <div class="inner"><div class="scenario-grid">${SCENARIOS.map(s=>`<div class="sc"><b>${s.t}</b>${s.d}</div>`).join('')}</div></div>
+  </details>
+  ${extra}
+  <button class="btn btn-ghost btn-sm" data-goto="cardcourse" type="button" style="margin-top:12px">前往正式卡片文字課 →</button>
+  `;
+}
+
+function renderSegPanel(seg){
+  switch(seg){
+    case 'open': return panelOpen();
+    case 'lesson1': return panelLesson1();
+    case 'ex1': return panelEx1();
+    case 'fav': return panelFav();
+    case 'jukebox': return panelJukebox();
+    case 'lesson2': return panelLesson2();
+    case 'ex2': return panelEx2();
+    case 'lesson3': return panelLesson3();
+    default: return '';
+  }
+}
+
+function renderTextbookViewer(){
+  const g = GRADES[currentGrade];
+  const pageSrc = g.pages[currentTbPage];
+  return `
+  <div class="tb-viewer">
+    <div class="tb-tools">
+      <div class="tb-pages">
+        <button data-pg="0" type="button" ${currentTbPage===0?'aria-current="true"':''}>第 1 面</button>
+        <button data-pg="1" type="button" ${currentTbPage===1?'aria-current="true"':''}>第 2 面</button>
+      </div>
+      <button class="lightbox-btn" id="zoomBtn" type="button">🔍 放大檢視</button>
+    </div>
+    <div class="tb-frame">
+      <img src="${pageSrc}" alt="${g.short} 教材 第${currentTbPage+1}面" id="tbImg">
+      ${ZONES.filter(z=>z.page===currentTbPage).map(z=>`
+        <button class="tb-zone ${z.seg===currentSeg?'active':''}" type="button" data-seg="${z.seg}" style="top:${z.top}%;height:${z.bottom-z.top}%" aria-label="跳到 ${z.label} 教學指引" title="${z.label}"></button>`).join('')}
+    </div>
+    <p class="tb-caption">${g.level} · 點選教材區塊或下方題目導覽，右側會顯示對應教學指引；手機版建議直接使用題目導覽。</p>
+  </div>`;
+}
+
+/* =========================================================================
+   五大頁面
+   ========================================================================= */
+function renderNav(){
+  const pages = [['home','課程總覽'],['weekly','每週進度'],['guide','教學指引'],['cardcourse','正式卡片文字課'],['resources','教材與資源']];
+  document.getElementById('mainNav').innerHTML = pages.map(([k,l])=>`<button data-goto="${k}" type="button" ${currentPageKey===k?'aria-current="page"':''}>${l}</button>`).join('');
+}
+function renderGradeSwitch(){
+  document.getElementById('gradeSwitch').innerHTML = Object.values(GRADES).map(g=>`<button data-grade="${g.key}" type="button" ${currentGrade===g.key?'aria-current="true"':''}>${g.short}</button>`).join('');
+}
+
+function renderHomePage(){
+  document.getElementById('app').innerHTML = `
+  <div class="hero">
+    <div class="sub">今年聖誕，為社區點亮祝福</div>
+    <h1>耶加聖誕暖心地圖 2026</h1>
+    <p style="max-width:62ch">從世界各地的聖誕文化出發，帶孩子認識社區店家的付出，學習用英文、卡片與行動，送出對方能感受到的祝福。</p>
+    <div class="journey">
+      <a href="#" data-goto="guide:lesson1"><span class="num">認識六國文化</span><span class="label">Lesson 1</span></a>
+      <span class="arrow">→</span>
+      <a href="#" data-goto="guide:lesson2"><span class="num">認識店家，準備祝福</span><span class="label">Lesson 2</span></a>
+      <span class="arrow">→</span>
+      <a href="#" data-goto="guide:ex2"><span class="num">寫卡片</span><span class="label">Exercise 2</span></a>
+      <span class="arrow">→</span>
+      <a href="#" data-goto="guide:lesson3"><span class="num">到店實踐</span><span class="label">Lesson 3</span></a>
+    </div>
+    <div class="callout callout-amber" style="margin-top:14px">
+      <h4>卡片流程</h4>
+      <p style="font-weight:700;margin-bottom:6px">${CARD_PIPELINE}</p>
+      <p style="margin-bottom:0">${CARD_PIPELINE_NOTE}</p>
+    </div>
+    <p style="font-size:.86rem;color:var(--muted);margin-bottom:0;margin-top:14px">先選擇要備課的年級（右上角隨時可切換）：</p>
+    <div class="grade-pick">
+      ${Object.values(GRADES).map(g=>`<button data-grade="${g.key}" type="button" ${currentGrade===g.key?'aria-current="true"':''}><b>${g.label}</b><span>${g.level}</span></button>`).join('')}
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
+      <button class="btn btn-flame" type="button" data-goto="guide:open">開始教學 →</button>
+      <button class="btn btn-ghost" type="button" data-goto="weekly">查看每週進度</button>
+      <button class="btn btn-ghost" type="button" data-goto="resources">教材與影片</button>
+    </div>
+  </div>
+
+  <div class="grid2" style="margin-top:22px">
+    <div class="card card-pad">
+      <h3 style="color:var(--pine);font-size:1.1rem">老師先掌握</h3>
+      <ul class="rule-list">${RULES.map(r=>`<li>${r}</li>`).join('')}</ul>
+    </div>
+    <div class="card card-pad">
+      <h3 style="color:var(--sky);font-size:1.1rem">教師課前準備</h3>
+      <ul class="prep-list">${PREP_LIST.map(p=>`<li>${p}</li>`).join('')}</ul>
+      <p style="font-size:.8rem;color:var(--muted);margin-bottom:0">以下教案建議時間是備課參考，不是倒數計時或強制完成限制。</p>
+    </div>
+  </div>
+
+  <div class="tbd" style="margin-top:22px">
+    <h4>⚠ 待確認事項（請勿自行假設）</h4>
+    <ul>${PENDING.map(p=>`<li>${p}</li>`).join('')}</ul>
+  </div>
+  `;
+}
+
+function renderWeeklyPage(){
+  document.getElementById('app').innerHTML = `
+  <h1 style="color:var(--flame)">每週進度</h1>
+  <p style="color:var(--ink-soft)">以下排程以此版本為準；斜體灰階列為 Outdoor Sentence 相關教學，本網站不收錄其教學內容，僅顯示排程。</p>
+  <div class="scrollx"><table class="weektable">
+    ${WEEKLY.map(w=>`<tr class="${w.link?'':'muted'}"><td>${w.date}</td><td>${w.text}${w.link?`<div class="wk-links">${w.link.map(l=>`<button class="btn btn-ghost btn-sm" type="button" data-goto="${l==='cardcourse'?'cardcourse':'guide:'+l}">前往 ${SEG_LABEL[l]||'正式卡片文字課'} →</button>`).join('')}</div>`:''}</td></tr>`).join('')}
+  </table></div>
+  <div class="callout callout-sky" style="margin-top:16px">
+    <h4>提醒</h4>
+    <p style="margin-bottom:0">不要自行設定五張卡片必須在 12/11 前全部完成；若家庭在活動開始時就要出發，先完成該次任務需要的卡片即可。</p>
+  </div>
+  `;
+}
+
+function renderCardCoursePage(){
+  document.getElementById('app').innerHTML = `
+  <h1 style="color:var(--flame)">正式卡片文字課</h1>
+  <p style="color:var(--ink-soft);max-width:68ch">與 Exercise 2 的 sample 練習分開呈現：英語課完成文字，教學教室完成圖畫、著色與裝飾。</p>
+  <p class="task-callout"><b>課前：</b>${CARD_PRE}</p>
+  <div class="grid2">
+    <div class="card card-pad">
+      <h3 style="color:var(--sky);font-size:1.1rem">課堂流程</h3>
+      <div class="flow-steps">${CARD_FLOW.map(s=>`<div class="fs"><div class="fn"></div><div>${s}</div></div>`).join('')}</div>
+    </div>
+    <div class="card card-pad">
+      <h3 style="color:var(--pine);font-size:1.1rem">文字檢查清單</h3>
+      <ul class="checklist">${CARD_CHECK.map(c=>`<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 12l5 5L20 6"/></svg>${c}</li>`).join('')}</ul>
+      <p style="font-size:.85rem;color:var(--muted);margin-top:12px;margin-bottom:0">每生五張卡片，自由選擇收件人，不要求五張內容完全不同，也不要求 12/11 前五張全部寫完。若家庭在活動開始時就要出發，先完成該次任務需要的卡片。</p>
+    </div>
+  </div>
+  <div class="card card-pad" style="margin-top:18px">
+    <h3 style="font-size:1.05rem">分齡檢查：${GRADES[currentGrade].short}</h3>
+    <p style="color:var(--ink-soft)">${CARD_CHECK_BY_GRADE[currentGrade]}</p>
+    <p style="color:var(--ink-soft)">正式卡片文字課以 Exercise 2 已完成的 sample 為參考基礎，更換店名、服務、喜好與祝願即可。</p>
+    <button class="btn btn-ghost btn-sm" type="button" data-goto="guide:ex2">查看 ${GRADES[currentGrade].short} Exercise 2 範例 →</button>
+  </div>
+  `;
+}
+
+function renderResourcesPage(){
+  document.getElementById('app').innerHTML = `
+  <h1 style="color:var(--flame)">教材與資源</h1>
+  <div class="grid2">
+    ${Object.values(GRADES).map(g=>`
+    <div class="card card-pad">
+      <h3 style="font-size:1.05rem">${g.label} <span class="pill pill-sky">${g.level}</span></h3>
+      <div class="resource-grade">
+        <img src="${g.pages[0]}" alt="${g.short} 第1面"><img src="${g.pages[1]}" alt="${g.short} 第2面">
+      </div>
+      <button class="btn btn-ghost btn-sm" style="margin-top:10px" type="button" data-goto="guide:open:${g.key}">前往教學指引 →</button>
+    </div>`).join('')}
+  </div>
+
+  <div class="card card-pad" style="margin-top:18px">
+    <h3 style="color:var(--pine);font-size:1.1rem">影音資源</h3>
+    <p>六國祝福影片：<a href="https://www.youtube.com/watch?v=g0RoLcCOqfE" target="_blank" rel="noopener">youtube.com/watch?v=g0RoLcCOqfE</a></p>
+    <p>Christmas Jukebox 播放清單（教材 QR code 連至此清單）：<a href="${PLAYLIST_URL}" target="_blank" rel="noopener">${PLAYLIST_URL}</a></p>
+    <button class="btn btn-ghost btn-sm" type="button" data-goto="guide:jukebox">前往 Jukebox 教學 →</button>
+  </div>
+
+  <div class="card card-pad" style="margin-top:18px">
+    <h3 style="color:var(--sky);font-size:1.1rem">六國文化備課總覽</h3>
+    ${countryPrepHTML()}
+  </div>
+
+  <div class="tbd" style="margin-top:18px">
+    <h4>⚠ 待確認事項</h4>
+    <ul>${PENDING.map(p=>`<li>${p}</li>`).join('')}</ul>
+  </div>
+
+  <div class="card card-pad" style="margin-top:18px">
+    <h3 style="font-size:1rem">製作說明／與附件 PDF 的差異</h3>
+    <ul class="prep-list" style="font-size:.88rem;color:var(--ink-soft)">
+      <li>三份附件 PDF 原始內容未被修改；本網站之教學步驟、文化背景與十二張卡片範例，皆為依據 PDF 內容延伸編寫的教學用文字。</li>
+      <li>PDF 印刷品牌為「A PLUS CHRISTMAS WALK」，本網站依決議改用中文活動名稱「耶加聖誕暖心地圖 2026」，兩者並存、不互相取代。</li>
+      <li>教材上印製的 QR code 原本連到 Jukebox／六國祝福播放清單，本網站沿用同一份播放清單連結，不另外製作新的 QR code。</li>
+      <li>L&amp;U PDF 的 Lesson 2「Ideas」欄印刷文字為 sell pencils／care for animals；本次決議改用 sell school supplies／sell pet supplies，避免預設寵物店一定提供照護或救援，網站以最新決議為準，PDF 文字未同步修改。</li>
+      <li>L&amp;U PDF 的 Lesson 2 對話最後一格「B: I will ___.」印刷為開放式空格；本次決議示範為固定句「I will say “Merry Christmas!”」，作為口說練習的建議語句，學習單上的空格仍可讓學生自行填寫。</li>
+    </ul>
+  </div>
+  `;
+}
+
+function renderGuidePage(){
+  document.getElementById('app').innerHTML = `
+  <div class="guide-topbar">
+    <span class="pill pill-flame">${GRADES[currentGrade].level}</span>
+    <div class="segnav">${SEG_ORDER.map(s=>`<button data-seg="${s}" type="button" ${s===currentSeg?'aria-current="true"':''}>${SEG_LABEL[s]}</button>`).join('')}</div>
+  </div>
+  <div class="guide-layout">
+    ${renderTextbookViewer()}
+    <div class="guide-panel card card-pad">${renderSegPanel(currentSeg)}</div>
+  </div>
+  `;
+}
+
+function render(){
+  renderNav();
+  renderGradeSwitch();
+  if(currentPageKey==='home') renderHomePage();
+  else if(currentPageKey==='weekly') renderWeeklyPage();
+  else if(currentPageKey==='guide') renderGuidePage();
+  else if(currentPageKey==='cardcourse') renderCardCoursePage();
+  else if(currentPageKey==='resources') renderResourcesPage();
+  else renderHomePage();
+}
+
+/* =========================================================================
+   事件委派
+   ========================================================================= */
+document.body.addEventListener('click', function(e){
+  const gradeBtn = e.target.closest('#gradeSwitch button[data-grade], .grade-pick button[data-grade]');
+  if(gradeBtn){ setGrade(gradeBtn.dataset.grade); return; }
+
+  const projBtn = e.target.closest('#projToggle');
+  if(projBtn){ toggleProjector(); return; }
+
+  const pgBtn = e.target.closest('.tb-pages button[data-pg]');
+  if(pgBtn){ currentTbPage = Number(pgBtn.dataset.pg); renderGuidePage(); return; }
+
+  const zoneBtn = e.target.closest('.tb-zone[data-seg]');
+  if(zoneBtn){ setSeg(zoneBtn.dataset.seg); return; }
+
+  const segBtn = e.target.closest('.segnav button[data-seg]');
+  if(segBtn){ setSeg(segBtn.dataset.seg); return; }
+
+  const zoomBtn = e.target.closest('#zoomBtn');
+  if(zoomBtn){ openLightbox(GRADES[currentGrade].pages[currentTbPage]); return; }
+
+  const jumpBtn = e.target.closest('.video-jump button[data-t]');
+  if(jumpBtn){ jumpVideo(Number(jumpBtn.dataset.t)); return; }
+
+  const galleryBtn = e.target.closest('#openGallery12');
+  if(galleryBtn){ openGallery12(); return; }
+
+  const ansBtn = e.target.closest('#ex1AnswerToggle');
+  if(ansBtn){
+    const list = document.getElementById('ex1List');
+    const show = list.classList.toggle('show-answers');
+    ansBtn.textContent = show ? '隱藏解答' : '顯示解答';
+    return;
+  }
+
+  if(e.target.closest('.modal-close') || e.target.classList.contains('modal-backdrop')){ closeModal(); return; }
+
+  const gotoEl = e.target.closest('[data-goto]');
+  if(gotoEl){ e.preventDefault(); go(gotoEl.dataset.goto); return; }
+});
+
+document.getElementById('pdfSyncNote').textContent = '內容依使用者提供之教案決議與 A & P／L & U／S & J 三份教材製作，詳見「教材與資源」頁之製作說明。';
+
+/* 初始渲染 */
+render();
+</script>
